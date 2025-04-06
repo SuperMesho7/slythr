@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callback - Discord Login</title>
+</head>
+<body>
+    <h1>Processing your login...</h1>
+
+    <script>
+        window.onload = function() {
+            // قراءة الكود من الـ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+                // تبادل الكود بـ access_token
+                fetch('https://discord.com/api/oauth2/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'client_id': '1355356656292073522',
+                        'client_secret': 'SKjeYM0fUaF7Ua2EwyoYxiBJhyzP2crQ',
+                        'grant_type': 'authorization_code',
+                        'code': code,
+                        'redirect_uri': 'https://supermesho7.github.io/slythr/callback.html',  // خليها متوافقة مع Redirect URI
+                        'scope': 'identify guilds',
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const accessToken = data.access_token;
+                    if (accessToken) {
+                        // استخدام الـ access_token لطلب بيانات المستخدم
+                        fetch('https://discord.com/api/users/@me', {
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(userData => {
+                            // تخزين بيانات المستخدم في localStorage
+                            localStorage.setItem('user', JSON.stringify(userData));
+                            
+                            // جلب بيانات السيرفرات
+                            fetch('https://discord.com/api/users/@me/guilds', {
+                                headers: {
+                                    'Authorization': `Bearer ${accessToken}`,
+                                },
+                            })
+                            .then(response => response.json())
+                            .then(guildsData => {
+                                localStorage.setItem('guilds', JSON.stringify(guildsData));
+                                // إعادة التوجيه إلى الداشبورد
+                                window.location.href = "dashboard.html";
+                            });
+                        });
+                    }
+                });
+            } else {
+                // إذا مفيش كود
+                window.location.href = "login.html";  // إعادة توجيه لتسجيل الدخول إذا الكود مش موجود
+            }
+        };
+    </script>
+</body>
+</html>

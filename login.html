@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Discord</title>
+</head>
+<body>
+    <h1>Login to the Dashboard</h1>
+    <button onclick="loginWithDiscord()">Login with Discord</button>
+
+    <script>
+        function loginWithDiscord() {
+            const CLIENT_ID = "1355356656292073522";
+            const REDIRECT_URI = "https://supermesho7.github.io/slythr/callback.html"; // Redirect URI
+            const SCOPE = "identify guilds"; // Scopes needed
+
+            // Redirect user to Discord's OAuth URL
+            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}`;
+        }
+    </script>
+</body>
+</html>

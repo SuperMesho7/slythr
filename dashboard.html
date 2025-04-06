@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to the Dashboard</h1>
+    <div id="user-info"></div>
+    <div id="guilds-info"></div>
+
+    <script>
+        window.onload = function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const guilds = JSON.parse(localStorage.getItem('guilds'));
+
+            if (user && guilds) {
+                // عرض بيانات المستخدم
+                const userInfoDiv = document.getElementById('user-info');
+                userInfoDiv.innerHTML = `
+                    <h2>User Info</h2>
+                    <p><strong>Username:</strong> ${user.username}#${user.discriminator}</p>
+                    <img src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png" alt="User Avatar" width="100">
+                `;
+
+                // عرض بيانات السيرفرات
+                const guildsInfoDiv = document.getElementById('guilds-info');
+                guildsInfoDiv.innerHTML = '<h3>Your Guilds:</h3>';
+                guilds.forEach(guild => {
+                    guildsInfoDiv.innerHTML += `<p>${guild.name}</p>`;
+                });
+            } else {
+                // إذا البيانات غير موجودة
+                window.location.href = "login.html";  // إعادة توجيه لصفحة تسجيل الدخول
+            }
+        };
+    </script>
+</body>
+</html>
