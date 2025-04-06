@@ -12,10 +12,35 @@
 
     <script>
         window.onload = function() {
+            
             const user = JSON.parse(localStorage.getItem('user'));
             const guilds = JSON.parse(localStorage.getItem('guilds'));
+            const accessToken = JSON.parse(localStorage.getItem("code"));
 
             if (user && guilds) {
+                fetch('https://discord.com/api/users/@me', {
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(userData => {
+                            // تخزين بيانات المستخدم في localStorage
+                            localStorage.setItem('user', JSON.stringify(userData));
+                            
+                            // جلب بيانات السيرفرات
+                            fetch('https://discord.com/api/users/@me/guilds', {
+                                headers: {
+                                    'Authorization': `Bearer ${accessToken}`,
+                                },
+                            })
+                            .then(response => response.json())
+                            .then(guildsData => {
+                                localStorage.setItem('guilds', JSON.stringify(guildsData));
+                                // إعادة التوجيه إلى الداشبورد
+                                window.location.href = "dashboard.html";
+                            });
+                        });
                 // عرض بيانات المستخدم
                 const userInfoDiv = document.getElementById('user-info');
                 userInfoDiv.innerHTML = `
